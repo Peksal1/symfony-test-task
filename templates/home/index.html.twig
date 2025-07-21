@@ -1,0 +1,210 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard - Employee Management System{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+        <h1 class="page-title">
+            <i class="fas fa-tachometer-alt"></i>
+            Dashboard Overview
+        </h1>
+        <div class="d-flex flex-column flex-sm-row gap-2 w-100 w-md-auto">
+            <a href="{{ path('app_employee_new') }}" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i>
+                Add Employee
+            </a>
+            <a href="{{ path('app_department_new') }}" class="btn btn-success">
+                <i class="fas fa-building"></i>
+                Add Department
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 g-md-4 mb-4">
+    <div class="col-md-6">
+        <div class="stats-card">
+            <div class="stats-number">{{ total_employees }}</div>
+            <div class="stats-label">Total Employees</div>
+            <i class="fas fa-users stats-icon"></i>
+            <div class="mt-3">
+                <a href="{{ path('app_employee_index') }}" class="text-white text-decoration-none fw-semibold">
+                    View All Employees <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="stats-card success">
+            <div class="stats-number">{{ total_departments }}</div>
+            <div class="stats-label">Active Departments</div>
+            <i class="fas fa-building stats-icon"></i>
+            <div class="mt-3">
+                <a href="{{ path('app_department_index') }}" class="text-white text-decoration-none fw-semibold">
+                    View All Departments <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 g-md-4">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-clock me-2 text-primary"></i>
+                        Recent Employees
+                    </h5>
+                    <a href="{{ path('app_employee_index') }}" class="btn btn-outline-primary btn-sm">
+                        View All
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                {% if recent_employees %}
+                    <div class="table-responsive d-none d-md-block">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Department</th>
+                                    <th>Hire Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for employee in recent_employees %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-circle me-3">
+                                                    <i class="fas fa-user"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-semibold">{{ employee.name }}</div>
+                                                    <div class="text-muted small">{{ employee.email }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">{{ employee.department.name }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-muted">{{ employee.hireDate|date('M d, Y') }}</span>
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('app_employee_show', {'id': employee.id}) }}" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Mobile View for Recent Employees -->
+                    <div class="d-block d-md-none p-3">
+                        {% for employee in recent_employees %}
+                            <div class="d-flex align-items-center justify-content-between py-2 {% if not loop.last %}border-bottom{% endif %}">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-circle me-3">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">{{ employee.name }}</div>
+                                        <div class="text-muted small">{{ employee.department.name }}</div>
+                                    </div>
+                                </div>
+                                <a href="{{ path('app_employee_show', {'id': employee.id}) }}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <h5>No employees yet</h5>
+                        <p class="text-muted">Start by adding your first employee to the system.</p>
+                        <a href="{{ path('app_employee_new') }}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Add First Employee
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-rocket me-2 text-success"></i>
+                    Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-3">
+                    <a href="{{ path('app_employee_new') }}" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i>
+                        Add New Employee
+                    </a>
+                    <a href="{{ path('app_department_new') }}" class="btn btn-success">
+                        <i class="fas fa-building"></i>
+                        Create Department
+                    </a>
+                    <a href="{{ path('app_employee_index') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-list"></i>
+                        Browse Employees
+                    </a>
+                    <a href="{{ path('app_department_index') }}" class="btn btn-outline-success">
+                        <i class="fas fa-sitemap"></i>
+                        Manage Departments
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2 text-info"></i>
+                    System Info
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="border-end">
+                            <div class="h4 text-primary mb-1">{{ total_employees }}</div>
+                            <div class="small text-muted">Employees</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="h4 text-success mb-1">{{ total_departments }}</div>
+                        <div class="small text-muted">Departments</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 0.875rem;
+}
+</style>
+{% endblock %}

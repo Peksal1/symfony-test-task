@@ -1,0 +1,152 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Employee - Employee Management System{% endblock %}
+
+{% block body %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('app_employee_index') }}">Employees</a></li>
+        <li class="breadcrumb-item active">Add New Employee</li>
+    </ol>
+</nav>
+
+<div class="page-header">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+        <h1 class="page-title">
+            <i class="fas fa-user-plus"></i>
+            Add New Employee
+        </h1>
+        <a href="{{ path('app_employee_index') }}" class="btn btn-outline-secondary w-100 w-md-auto">
+            <i class="fas fa-arrow-left"></i>
+            Back to List
+        </a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-user-circle me-2"></i>
+                    Employee Information
+                </h5>
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+                    <div class="row g-3 g-md-4">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form_label(form.name, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': 'Enter full name'}}) }}
+                                {{ form_errors(form.name) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form_label(form.email, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Enter email address'}}) }}
+                                {{ form_errors(form.email) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form_label(form.phoneNumber, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.phoneNumber, {'attr': {'class': 'form-control', 'placeholder': 'Enter phone number (optional)'}}) }}
+                                {{ form_errors(form.phoneNumber) }}
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Optional field. Format: +1-555-0123
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form_label(form.department, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.department, {'attr': {'class': 'form-select'}}) }}
+                                {{ form_errors(form.department) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form_label(form.hireDate, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.hireDate, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.hireDate) }}
+                                <div class="form-text">
+                                    <i class="fas fa-calendar me-1"></i>
+                                    Employee's first day of work
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-end gap-2">
+                        <a href="{{ path('app_employee_index') }}" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Save Employee
+                        </button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    Tips for Adding Employees
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-2 g-md-3">
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                            </div>
+                            <div>
+                                <strong>Email Uniqueness:</strong> Each employee must have a unique email address.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                            </div>
+                            <div>
+                                <strong>Department Required:</strong> Every employee must be assigned to a department.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                            </div>
+                            <div>
+                                <strong>Hire Date:</strong> Cannot be set to a future date.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                            </div>
+                            <div>
+                                <strong>Phone Optional:</strong> Phone number is not required but recommended.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

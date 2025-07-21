@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Department - Employee Management System{% endblock %}
+
+{% block body %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('app_department_index') }}">Departments</a></li>
+        <li class="breadcrumb-item active">Add New Department</li>
+    </ol>
+</nav>
+
+<div class="page-header">
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-3">
+        <h1 class="page-title">
+            <i class="fas fa-building"></i>
+            Add New Department
+        </h1>
+        <a href="{{ path('app_department_index') }}" class="btn btn-outline-secondary w-100 w-lg-auto">
+            <i class="fas fa-arrow-left"></i>
+            Back to List
+        </a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-building me-2"></i>
+                    Department Information
+                </h5>
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+                    <div class="row g-3 g-md-4">
+                        <div class="col-12">
+                            <div class="form-group">
+                                {{ form_label(form.name, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': 'Enter department name'}}) }}
+                                {{ form_errors(form.name) }}
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Enter department description (optional)', 'rows': 4}}) }}
+                                {{ form_errors(form.description) }}
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Optional field. Describe the department's role and responsibilities.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-end gap-2">
+                        <a href="{{ path('app_department_index') }}" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Save Department
+                        </button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    Tips for Adding Departments
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-2 g-md-3">
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                            </div>
+                            <div>
+                                <strong>Department Name:</strong> Choose a clear, descriptive name for the department.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                            </div>
+                            <div>
+                                <strong>Description Optional:</strong> Add details about the department's role and responsibilities.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                            </div>
+                            <div>
+                                <strong>Employee Assignment:</strong> After creating, you can assign employees to this department.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                            </div>
+                            <div>
+                                <strong>Deletion Policy:</strong> Departments with employees cannot be deleted.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

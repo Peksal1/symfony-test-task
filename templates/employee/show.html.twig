@@ -1,0 +1,299 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ employee.name }} - Employee Management System{% endblock %}
+
+{% block body %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('app_employee_index') }}">Employees</a></li>
+        <li class="breadcrumb-item active">{{ employee.name }}</li>
+    </ol>
+</nav>
+
+<div class="page-header">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+        <h1 class="page-title">
+            <i class="fas fa-user"></i>
+            Employee Profile
+        </h1>
+        <div class="d-flex flex-column flex-sm-row gap-2 w-100 w-md-auto">
+            <a href="{{ path('app_employee_edit', {'id': employee.id}) }}" class="btn btn-warning">
+                <i class="fas fa-edit"></i>
+                Edit Profile
+            </a>
+            <a href="{{ path('app_employee_index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Back to List
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 g-md-4">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="avatar-large mx-auto mb-3">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h4 class="mb-1">{{ employee.name }}</h4>
+                <p class="text-muted mb-3">{{ employee.department.name }}</p>
+                <div class="d-flex justify-content-center gap-2">
+                    <a href="mailto:{{ employee.email }}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                    {% if employee.phoneNumber %}
+                        <a href="tel:{{ employee.phoneNumber }}" class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-phone"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Employment Stats
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-12 mb-3">
+                        <div class="h4 text-primary mb-1">
+                            {% set years = date().diff(employee.hireDate).y %}
+                            {% set months = date().diff(employee.hireDate).m %}
+                            {% if years > 0 %}
+                                {{ years }}.{{ (months/12*10)|round }}
+                            {% else %}
+                                0.{{ (months/12*10)|round }}
+                            {% endif %}
+                        </div>
+                        <div class="small text-muted">Years of Service</div>
+                    </div>
+                    <div class="col-12">
+                        <div class="h6 text-success mb-1">Active</div>
+                        <div class="small text-muted">Employment Status</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Personal Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 g-md-4">
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <label class="info-label">Full Name</label>
+                            <div class="info-value">{{ employee.name }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <label class="info-label">Email Address</label>
+                            <div class="info-value">
+                                <a href="mailto:{{ employee.email }}" class="text-decoration-none">
+                                    {{ employee.email }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <label class="info-label">Phone Number</label>
+                            <div class="info-value">
+                                {% if employee.phoneNumber %}
+                                    <a href="tel:{{ employee.phoneNumber }}" class="text-decoration-none">
+                                        {{ employee.phoneNumber }}
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">Not provided</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <label class="info-label">Employee ID</label>
+                            <div class="info-value">#{{ employee.id }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-briefcase me-2"></i>
+                    Work Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 g-md-4">
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <label class="info-label">Department</label>
+                            <div class="info-value">
+                                <span class="badge bg-secondary fs-6">{{ employee.department.name }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <label class="info-label">Hire Date</label>
+                            <div class="info-value">{{ employee.hireDate|date('F d, Y') }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <label class="info-label">Length of Service</label>
+                            <div class="info-value">
+                                {% set years = date().diff(employee.hireDate).y %}
+                                {% set months = date().diff(employee.hireDate).m %}
+                                {% set days = date().diff(employee.hireDate).d %}
+                                {% if years > 0 %}
+                                    {{ years }} year{{ years > 1 ? 's' : '' }}
+                                    {% if months > 0 %}, {{ months }} month{{ months > 1 ? 's' : '' }}{% endif %}
+                                {% elseif months > 0 %}
+                                    {{ months }} month{{ months > 1 ? 's' : '' }}
+                                    {% if days > 0 %}, {{ days }} day{{ days > 1 ? 's' : '' }}{% endif %}
+                                {% else %}
+                                    {{ days }} day{{ days > 1 ? 's' : '' }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <label class="info-label">Status</label>
+                            <div class="info-value">
+                                <span class="badge bg-success">Active Employee</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if employee.department.description %}
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-building me-2"></i>
+                        Department Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-0">{{ employee.department.description }}</p>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="card mt-4 border-danger">
+            <div class="card-header bg-light-danger">
+                <h5 class="card-title mb-0 text-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Danger Zone
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-3">
+                    Permanently delete this employee from the system. This action cannot be undone.
+                </p>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <i class="fas fa-trash me-2"></i>Delete Employee
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle text-danger me-2"></i>
+                    Confirm Deletion
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="avatar-large mx-auto mb-3">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h6>Delete Employee</h6>
+                    <p class="text-muted">
+                        Are you sure you want to permanently delete <strong>{{ employee.name }}</strong>? 
+                        This action cannot be undone and will remove all associated data.
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+                <form method="post" action="{{ path('app_employee_delete', {'id': employee.id}) }}" style="display: inline;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ employee.id) }}">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i>Delete Employee
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.avatar-large {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 2rem;
+}
+
+.info-item {
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+}
+
+.info-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+.info-value {
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.bg-light-danger {
+    background-color: #fef2f2 !important;
+}
+</style>
+{% endblock %}

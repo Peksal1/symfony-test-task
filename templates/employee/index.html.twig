@@ -1,0 +1,276 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Employees - Employee Management System{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-3">
+        <h1 class="page-title">
+            <i class="fas fa-user-tie"></i>
+            Employee Directory
+        </h1>
+        <a href="{{ path('app_employee_new') }}" class="btn btn-primary w-100 w-lg-auto">
+            <i class="fas fa-plus"></i>
+            Add Employee
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-3">
+            <div class="flex-grow-1">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-users me-2"></i>
+                    All Employees
+                    {% if employees %}
+                        <span class="badge bg-primary ms-2">{{ employees|length }}</span>
+                    {% endif %}
+                </h5>
+            </div>
+            <div class="w-100 w-md-auto">
+                <form method="GET" class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" name="search" class="form-control" 
+                           placeholder="Search by name or email..." 
+                           value="{{ search }}">
+                    {% if search %}
+                        <a href="{{ path('app_employee_index') }}" class="btn btn-outline-secondary btn-sm position-absolute" 
+                           style="right: 10px; top: 50%; transform: translateY(-50%);">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card-body p-0">
+        {% if employees %}
+            <!-- Desktop Table View - Hidden on Mobile -->
+            <div class="table-responsive d-none d-lg-block">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Contact</th>
+                            <th>Department</th>
+                            <th>Hire Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for employee in employees %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle me-3">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-semibold">{{ employee.name }}</div>
+                                            <div class="text-muted small">ID: #{{ employee.id }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <div class="small">
+                                            <i class="fas fa-envelope me-1 text-muted"></i>
+                                            {{ employee.email }}
+                                        </div>
+                                        {% if employee.phoneNumber %}
+                                            <div class="small text-muted">
+                                                <i class="fas fa-phone me-1"></i>
+                                                {{ employee.phoneNumber }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ employee.department.name }}</span>
+                                </td>
+                                <td>
+                                    <div class="small">
+                                        <div class="fw-semibold">{{ employee.hireDate|date('M d, Y') }}</div>
+                                        <div class="text-muted">
+                                            {% set years = date().diff(employee.hireDate).y %}
+                                            {% if years > 0 %}
+                                                {{ years }} year{{ years > 1 ? 's' : '' }}
+                                            {% else %}
+                                                New hire
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ path('app_employee_show', {'id': employee.id}) }}" 
+                                           class="btn btn-outline-info btn-sm" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ path('app_employee_edit', {'id': employee.id}) }}" 
+                                           class="btn btn-outline-warning btn-sm" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" 
+                                                data-bs-toggle="modal" data-bs-target="#deleteModal{{ employee.id }}" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Mobile Card View - Hidden on Desktop -->
+            <div class="d-block d-lg-none p-3">
+                {% for employee in employees %}
+                    <div class="mobile-employee-card">
+                        <div class="mobile-employee-header">
+                            <div class="avatar-circle me-3">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="mobile-employee-info">
+                                <div class="mobile-employee-name">{{ employee.name }}</div>
+                                <div class="mobile-employee-email">{{ employee.email }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mobile-employee-details">
+                            <div class="mobile-detail-item">
+                                <div class="mobile-detail-label">Department</div>
+                                <div class="mobile-detail-value">
+                                    <span class="badge bg-secondary">{{ employee.department.name }}</span>
+                                </div>
+                            </div>
+                            <div class="mobile-detail-item">
+                                <div class="mobile-detail-label">Hire Date</div>
+                                <div class="mobile-detail-value">{{ employee.hireDate|date('M d, Y') }}</div>
+                            </div>
+                            <div class="mobile-detail-item">
+                                <div class="mobile-detail-label">Phone</div>
+                                <div class="mobile-detail-value">
+                                    {% if employee.phoneNumber %}
+                                        {{ employee.phoneNumber }}
+                                    {% else %}
+                                        <span class="text-muted">Not provided</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="mobile-detail-item">
+                                <div class="mobile-detail-label">Employee ID</div>
+                                <div class="mobile-detail-value">#{{ employee.id }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mobile-actions">
+                            <a href="{{ path('app_employee_show', {'id': employee.id}) }}" class="btn btn-outline-info btn-sm">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <a href="{{ path('app_employee_edit', {'id': employee.id}) }}" class="btn btn-outline-warning btn-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <button type="button" class="btn btn-outline-danger btn-sm" 
+                                    data-bs-toggle="modal" data-bs-target="#deleteModal{{ employee.id }}">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-users"></i>
+                <h5>No employees found</h5>
+                {% if search %}
+                    <p class="text-muted">No employees match your search for "{{ search }}".</p>
+                    <a href="{{ path('app_employee_index') }}" class="btn btn-outline-primary me-2">
+                        <i class="fas fa-list me-2"></i>View All Employees
+                    </a>
+                {% else %}
+                    <p class="text-muted">Start by adding your first employee to the system.</p>
+                {% endif %}
+                <a href="{{ path('app_employee_new') }}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Add Employee
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Delete Modals -->
+{% if employees %}
+    {% for employee in employees %}
+        <div class="modal fade" id="deleteModal{{ employee.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ employee.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel{{ employee.id }}">
+                            <i class="fas fa-exclamation-triangle text-danger me-2"></i>
+                            Confirm Deletion
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center">
+                            <div class="avatar-circle mx-auto mb-3" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h6>Delete Employee</h6>
+                            <p class="text-muted">
+                                Are you sure you want to delete <strong>{{ employee.name }}</strong>? 
+                                This action cannot be undone.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+                        <form method="post" action="{{ path('app_employee_delete', {'id': employee.id}) }}" style="display: inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ employee.id) }}">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash me-2"></i>Delete Employee
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<style>
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box .form-control {
+    padding-left: 2.5rem;
+}
+
+.search-box i {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    z-index: 5;
+}
+</style>
+{% endblock %}

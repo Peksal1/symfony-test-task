@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Employee Management System{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>👥</text></svg>">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <!-- Bootstrap 5.3 -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Font Awesome 6 -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        
+        <style>
+            :root {
+                --primary-color: #2563eb;
+                --primary-dark: #1d4ed8;
+                --secondary-color: #64748b;
+                --success-color: #059669;
+                --warning-color: #d97706;
+                --danger-color: #dc2626;
+                --light-bg: #f8fafc;
+                --card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+                --card-shadow-hover: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            }
+
+            body {
+                font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background-color: var(--light-bg);
+                line-height: 1.6;
+            }
+
+            .navbar {
+                background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+                box-shadow: var(--card-shadow);
+                padding: 1rem 0;
+            }
+
+            .navbar-brand {
+                font-weight: 600;
+                font-size: 1.25rem;
+                display: flex;
+                align-items: center;
+            }
+
+            .navbar-brand i {
+                background: rgba(255, 255, 255, 0.2);
+                padding: 0.5rem;
+                border-radius: 0.5rem;
+                margin-right: 0.75rem;
+            }
+
+            .nav-link {
+                font-weight: 500;
+                transition: all 0.2s ease;
+                border-radius: 0.375rem;
+                margin: 0 0.25rem;
+                padding: 0.5rem 1rem !important;
+            }
+
+            .nav-link:hover {
+                background: rgba(255, 255, 255, 0.1);
+                transform: translateY(-1px);
+            }
+
+            .main-container {
+                min-height: calc(100vh - 200px);
+                padding: 2rem 0;
+            }
+
+            .page-header {
+                background: white;
+                border-radius: 1rem;
+                padding: 2rem;
+                margin-bottom: 2rem;
+                box-shadow: var(--card-shadow);
+                border: 1px solid #e2e8f0;
+            }
+
+            .page-title {
+                font-weight: 700;
+                color: #1e293b;
+                margin: 0;
+                display: flex;
+                align-items: center;
+            }
+
+            .page-title i {
+                background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+                color: white;
+                padding: 0.75rem;
+                border-radius: 0.75rem;
+                margin-right: 1rem;
+                font-size: 1.25rem;
+            }
+
+            .card {
+                border: none;
+                border-radius: 1rem;
+                box-shadow: var(--card-shadow);
+                transition: all 0.3s ease;
+                background: white;
+            }
+
+            .card:hover {
+                box-shadow: var(--card-shadow-hover);
+                transform: translateY(-2px);
+            }
+
+            .card-header {
+                background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+                border-bottom: 1px solid #e2e8f0;
+                border-radius: 1rem 1rem 0 0 !important;
+                padding: 1.5rem;
+            }
+
+            .btn {
+                font-weight: 500;
+                border-radius: 0.5rem;
+                padding: 0.625rem 1.25rem;
+                transition: all 0.2s ease;
+                border: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            .btn-primary {
+                background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            }
+
+            .btn-success {
+                background: linear-gradient(135deg, var(--success-color), #047857);
+            }
+
+            .btn-warning {
+                background: linear-gradient(135deg, var(--warning-color), #b45309);
+            }
+
+            .btn-danger {
+                background: linear-gradient(135deg, var(--danger-color), #b91c1c);
+            }
+
+            .btn-outline-primary {
+                border: 2px solid var(--primary-color);
+                color: var(--primary-color);
+                background: transparent;
+            }
+
+            .btn-outline-primary:hover {
+                background: var(--primary-color);
+                color: white;
+            }
+
+            .table {
+                border-radius: 0.75rem;
+                overflow: hidden;
+                box-shadow: var(--card-shadow);
+                background: white;
+            }
+
+            .table thead th {
+                background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+                border: none;
+                font-weight: 600;
+                color: #374151;
+                padding: 1rem;
+                text-transform: uppercase;
+                font-size: 0.75rem;
+                letter-spacing: 0.05em;
+            }
+
+            .table tbody td {
+                padding: 1rem;
+                border-color: #f1f5f9;
+                vertical-align: middle;
+            }
+
+            .table tbody tr:hover {
+                background-color: #f8fafc;
+            }
+
+            .badge {
+                font-weight: 500;
+                padding: 0.5rem 0.75rem;
+                border-radius: 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            .alert {
+                border: none;
+                border-radius: 0.75rem;
+                padding: 1rem 1.25rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .alert-success {
+                background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+                color: #065f46;
+                border-left: 4px solid var(--success-color);
+            }
+
+            .alert-danger {
+                background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+                color: #991b1b;
+                border-left: 4px solid var(--danger-color);
+            }
+
+            .form-control, .form-select {
+                border: 2px solid #e2e8f0;
+                border-radius: 0.5rem;
+                padding: 0.75rem;
+                transition: all 0.2s ease;
+                font-weight: 400;
+            }
+
+            .form-control:focus, .form-select:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            }
+
+            .form-label {
+                font-weight: 600;
+                color: #374151;
+                margin-bottom: 0.5rem;
+            }
+
+            .stats-card {
+                background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+                color: white;
+                border-radius: 1rem;
+                padding: 2rem;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .stats-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 100px;
+                height: 100px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+                transform: translate(30px, -30px);
+            }
+
+            .stats-card.success {
+                background: linear-gradient(135deg, var(--success-color) 0%, #047857 100%);
+            }
+
+            .stats-card.warning {
+                background: linear-gradient(135deg, var(--warning-color) 0%, #b45309 100%);
+            }
+
+            .stats-number {
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+            }
+
+            .stats-label {
+                font-size: 1rem;
+                opacity: 0.9;
+                font-weight: 500;
+            }
+
+            .stats-icon {
+                position: absolute;
+                top: 1.5rem;
+                right: 1.5rem;
+                font-size: 2rem;
+                opacity: 0.3;
+            }
+
+            .footer {
+                background: white;
+                border-top: 1px solid #e2e8f0;
+                padding: 2rem 0;
+                margin-top: 3rem;
+            }
+
+            .modal-content {
+                border: none;
+                border-radius: 1rem;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            }
+
+            .modal-header {
+                border-bottom: 1px solid #e2e8f0;
+                border-radius: 1rem 1rem 0 0;
+                padding: 1.5rem;
+            }
+
+            .modal-body {
+                padding: 1.5rem;
+            }
+
+            .modal-footer {
+                border-top: 1px solid #e2e8f0;
+                border-radius: 0 0 1rem 1rem;
+                padding: 1.5rem;
+            }
+
+            .breadcrumb {
+                background: transparent;
+                padding: 0;
+                margin-bottom: 1rem;
+            }
+
+            .breadcrumb-item a {
+                color: var(--secondary-color);
+                text-decoration: none;
+            }
+
+            .breadcrumb-item.active {
+                color: var(--primary-color);
+                font-weight: 500;
+            }
+
+            .empty-state {
+                text-align: center;
+                padding: 4rem 2rem;
+                color: var(--secondary-color);
+            }
+
+            .empty-state i {
+                font-size: 4rem;
+                margin-bottom: 1.5rem;
+                opacity: 0.5;
+            }
+
+            .search-box {
+                position: relative;
+            }
+
+            .search-box .form-control {
+                padding-left: 3rem;
+            }
+
+            .search-box i {
+                position: absolute;
+                left: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--secondary-color);
+            }
+
+            @media (max-width: 768px) {
+                .page-header {
+                    padding: 1.5rem;
+                }
+                
+                .page-title {
+                    font-size: 1.5rem;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 0.5rem;
+                }
+                
+                .page-title i {
+                    margin-right: 0.5rem;
+                    margin-bottom: 0;
+                }
+                
+                .stats-number {
+                    font-size: 2rem;
+                }
+                
+                .btn {
+                    padding: 0.5rem 1rem;
+                    font-size: 0.875rem;
+                }
+                
+                .table-responsive {
+                    border-radius: 0.75rem;
+                    box-shadow: var(--card-shadow);
+                }
+                
+                .mobile-card {
+                    display: block !important;
+                }
+                
+                .mobile-card .table {
+                    display: none;
+                }
+                
+                .mobile-employee-card, .mobile-department-card {
+                    background: white;
+                    border-radius: 0.75rem;
+                    padding: 1rem;
+                    margin-bottom: 1rem;
+                    box-shadow: var(--card-shadow);
+                    border: 1px solid #e2e8f0;
+                }
+                
+                .mobile-employee-header {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 0.75rem;
+                    padding-bottom: 0.75rem;
+                    border-bottom: 1px solid #f1f5f9;
+                }
+                
+                .mobile-employee-info {
+                    flex: 1;
+                }
+                
+                .mobile-employee-name {
+                    font-weight: 600;
+                    color: #1e293b;
+                    margin-bottom: 0.25rem;
+                }
+                
+                .mobile-employee-email {
+                    font-size: 0.875rem;
+                    color: #64748b;
+                }
+                
+                .mobile-employee-details {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 0.75rem;
+                    margin-bottom: 1rem;
+                }
+                
+                .mobile-detail-item {
+                    display: flex;
+                    flex-direction: column;
+                }
+                
+                .mobile-detail-label {
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    color: #64748b;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    margin-bottom: 0.25rem;
+                }
+                
+                .mobile-detail-value {
+                    font-weight: 500;
+                    color: #1e293b;
+                }
+                
+                .mobile-actions {
+                    display: flex;
+                    gap: 0.5rem;
+                    justify-content: flex-end;
+                }
+                
+                .mobile-actions .btn {
+                    padding: 0.5rem;
+                    font-size: 0.875rem;
+                }
+                
+                .navbar-toggler {
+                    border: none;
+                    padding: 0.25rem 0.5rem;
+                }
+                
+                .navbar-toggler:focus {
+                    box-shadow: none;
+                }
+                
+                .navbar-collapse {
+                    margin-top: 1rem;
+                }
+                
+                .nav-link {
+                    padding: 0.75rem 1rem !important;
+                    margin: 0.25rem 0;
+                    border-radius: 0.5rem;
+                }
+                
+                .page-header .d-flex {
+                    flex-direction: column;
+                    align-items: flex-start !important;
+                    gap: 1rem;
+                }
+                
+                .page-header .btn {
+                    width: 100%;
+                    justify-content: center;
+                }
+                
+                .stats-card {
+                    margin-bottom: 1rem;
+                }
+                
+                .empty-state {
+                    padding: 2rem 1rem;
+                }
+                
+                .empty-state i {
+                    font-size: 3rem;
+                }
+                
+                .modal-dialog {
+                    margin: 1rem;
+                }
+                
+                .breadcrumb {
+                    font-size: 0.875rem;
+                    flex-wrap: wrap;
+                }
+                
+                .form-group {
+                    margin-bottom: 1.5rem;
+                }
+                
+                .card-body {
+                    padding: 1rem;
+                }
+                
+                .info-item {
+                    padding: 0.75rem;
+                }
+                
+                .avatar-large {
+                    width: 60px;
+                    height: 60px;
+                    font-size: 1.5rem;
+                }
+                
+                .avatar-circle {
+                    width: 35px;
+                    height: 35px;
+                    font-size: 0.75rem;
+                }
+            }
+        </style>
+        
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="{{ path('app_home') }}">
+                    <i class="fas fa-users"></i>
+                    Employee Management
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_home') }}">
+                                <i class="fas fa-home me-1"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_employee_index') }}">
+                                <i class="fas fa-user-tie me-1"></i>Employees
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_department_index') }}">
+                                <i class="fas fa-building me-1"></i>Departments
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-container">
+            <div class="container">
+                {% for type, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ type == 'error' ? 'danger' : type }} alert-dismissible fade show" role="alert">
+                            <i class="fas fa-{{ type == 'success' ? 'check-circle' : (type == 'error' ? 'exclamation-triangle' : 'info-circle') }} me-2"></i>
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+
+                {% block body %}{% endblock %}
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="container text-center">
+                <p class="text-muted mb-0">
+                    <i class="fas fa-copyright me-1"></i>
+                    {{ 'now'|date('Y') }} Employee Management System. Built with Symfony & Bootstrap.
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
