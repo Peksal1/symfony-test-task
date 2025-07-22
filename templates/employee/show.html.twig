@@ -39,16 +39,6 @@
                 </div>
                 <h4 class="mb-1">{{ employee.name }}</h4>
                 <p class="text-muted mb-3">{{ employee.department.name }}</p>
-                <div class="d-flex justify-content-center gap-2">
-                    <a href="mailto:{{ employee.email }}" class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-                    {% if employee.phoneNumber %}
-                        <a href="tel:{{ employee.phoneNumber }}" class="btn btn-outline-success btn-sm">
-                            <i class="fas fa-phone"></i>
-                        </a>
-                    {% endif %}
-                </div>
             </div>
         </div>
 
